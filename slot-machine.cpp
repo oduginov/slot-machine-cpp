@@ -23,8 +23,8 @@ void SlotMachine::setBet(unsigned int bet_) {
 
 void SlotMachine::play(std::vector<Reel> &reels) {
     window.initWindow(reels);
-    updateFreeGames();
     pay2();
+    updateFreeGames();
 }
 
 unsigned int SlotMachine::getTotalBet() const {
@@ -51,9 +51,10 @@ unsigned int SlotMachine::payForLine(const std::vector<unsigned int> &line, unsi
 }
 
 unsigned int SlotMachine::pay2() {
-    unsigned int currentPayment = 0, alpha = 1;
+    unsigned int currentPayment = 0;
     auto w = window.getWindow();
     for (const auto &pattern: winlines) {
+        unsigned int alpha = 1;
         unsigned int countWild = 0;
         std::vector<unsigned int> payline(window.getWidth());
         for (unsigned int i = 0; i < window.getWidth(); i++) {
@@ -74,7 +75,7 @@ unsigned int SlotMachine::pay2() {
                 alpha = 2;
             }
         } else {
-            if(countWild != window.getWidth()) {
+            if (countWild != window.getWidth()) {
                 alpha = 3;
             }
         }
@@ -91,14 +92,12 @@ unsigned int SlotMachine::payForScatters() {
     for (const auto &col: window.getWindow()) {
         if (std::find(col.begin(), col.end(), scatter) != col.end()) {
             i++;
-        } else {
-            break;
         }
     }
     if (i == 0) {
         return 0;
     }
-    if(!isBaseMode){
+    if (!isBaseMode) {
         return 3 * payoff[scatter][i - 1];
     }
     return payoff[scatter][i - 1];
@@ -123,14 +122,14 @@ std::vector<std::vector<unsigned int>> SlotMachine::getWinlines() const {
 void SlotMachine::simulateGame(unsigned int iters) {
     payment = 0;
     isBaseMode = true;
+    freeGames = 0;
     for (unsigned int i = 0; i < iters; i++) {
         play(baseReels);
         while (!isBaseMode) {
             play(freeReels);
             freeGames--;
-            if (!(freeGames > 0)) {
-                if (!isBaseMode)
-                    switchMode();
+            if (freeGames <= 0 && !isBaseMode) {
+                switchMode();
             }
         }
     }

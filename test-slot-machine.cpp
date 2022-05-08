@@ -37,7 +37,7 @@ TestSlotMachine::TestSlotMachine(SlotMachine sm) : sm(sm) {
 }
 
 double TestSlotMachine::getRTP() {
-    unsigned int iter = 1'000'000;
+    unsigned int iter = 1000000;
     sm.simulateGame(iter);
     return sm.getPayment() * 100.0 / (iter * sm.getTotalBet());
 }

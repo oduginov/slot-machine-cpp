@@ -77,9 +77,15 @@ int main() {
                    {freeReel1, freeReel2, freeReel3, freeReel4, freeReel5}, payoff, winlines, 3);
     TestSlotMachine test(sm);
     std::vector<double> rtp;
-    for (int i = 0; i < 10; i++) {
-        rtp.push_back(test.getRTP());
+    double s = 0;
+    int n = 10;
+    for (int i = 0; i < n; i++) {
+        auto x = test.getRTP();
+        rtp.push_back(x);
+        s += x;
     }
-    std::cout << rtp;
+    std::cout << "Mean RTP: " << s / n << std::endl;
+    std::cout << "RTPs: " << rtp;
+
     return 0;
 }
