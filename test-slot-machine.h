@@ -15,6 +15,7 @@ public:
     void testWindow();
     double getRTP();
     void testPay();
+    std::vector<double> testSymbolPayments();
 };
 
 #endif //SLOT_MACHINE_CPP_TEST_SLOT_MACHINE_H

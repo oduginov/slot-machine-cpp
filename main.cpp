@@ -9,7 +9,6 @@
 #include "util.h"
 
 
-
 std::ostream &operator<<(std::ostream &os, const std::map<unsigned int, unsigned int> &m) {
     for (auto pair: m) {
         os << "\'" << pair.first << "\' : " << pair.second << std::endl;
@@ -49,23 +48,23 @@ int main() {
             {11, 12, 5, 10, 6, 7, 8, 4, 10, 3, 8, 1, 11, 12, 5, 10, 3, 9, 4, 2, 9, 7, 6, 0, 7, 3, 8, 5, 11, 6, 4, 9, 2,
              6, 7, 1});
 
-    std::vector<std::vector<unsigned int>> payoff = {{0, 10, 250, 2500, 9000},// 0
-                                                     {0, 2,  25,  125,  750}, // 1
-                                                     {0, 2,  25,  125,  750}, // 2
-                                                     {0, 0,  20,  100,  400}, // 3
-                                                     {0, 0,  15,  75,   250}, // 4
-                                                     {0, 0,  15,  75,   250}, // 5
-                                                     {0, 0,  10,  50,   125}, // 6
-                                                     {0, 0,  10,  50,   125}, // 7
-                                                     {0, 0,  5,   25,   100}, // 8
-                                                     {0, 0,  5,   25,   100}, // 9
-                                                     {0, 0,  5,   25,   100}, // 10
-                                                     {0, 2,  5,   25,   100}, // 11
-                                                     {0, 2,  5,   20,   500}};  // {0, 20, 50,  200,  5000};
+    std::vector<std::vector<double>> payoff = {{0, 10, 250, 2500, 9000},// 0
+                                               {0, 2,  25,  125,  750}, // 1
+                                               {0, 2,  25,  125,  750}, // 2
+                                               {0, 0,  20,  100,  400}, // 3
+                                               {0, 0,  15,  75,   250}, // 4
+                                               {0, 0,  15,  75,   250}, // 5
+                                               {0, 0,  10,  50,   125}, // 6
+                                               {0, 0,  10,  50,   125}, // 7
+                                               {0, 0,  5,   25,   100}, // 8
+                                               {0, 0,  5,   25,   100}, // 9
+                                               {0, 0,  5,   25,   100}, // 10
+                                               {0, 2,  5,   25,   100}, // 11
+                                               {0, 20, 50,  200,  5000}};  // 12
 
-    std::vector<std::vector<unsigned int>> winlines = {{2, 2, 2, 2, 2},
+    std::vector<std::vector<unsigned int>> winlines = {{0, 0, 0, 0, 0},
                                                        {1, 1, 1, 1, 1},
-                                                       {0, 0, 0, 0, 0},
+                                                       {2, 2, 2, 2, 2},
                                                        {0, 1, 2, 1, 0},
                                                        {2, 1, 0, 1, 2},
                                                        {1, 2, 2, 2, 1},
@@ -76,16 +75,7 @@ int main() {
     SlotMachine sm({baseReel1, baseReel2, baseReel3, baseReel4, baseReel5},
                    {freeReel1, freeReel2, freeReel3, freeReel4, freeReel5}, payoff, winlines, 3);
     TestSlotMachine test(sm);
-    std::vector<double> rtp;
-    double s = 0;
-    int n = 10;
-    for (int i = 0; i < n; i++) {
-        auto x = test.getRTP();
-        rtp.push_back(x);
-        s += x;
-    }
-    std::cout << "Mean RTP: " << s / n << std::endl;
-    std::cout << "RTPs: " << rtp;
+    std::cout << test.getRTP();
 
     return 0;
 }

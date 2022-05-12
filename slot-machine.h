@@ -16,38 +16,43 @@
 
 class SlotMachine {
 private:
-    unsigned int credits = 100000;
-    unsigned int lines = 10;
+    unsigned int lines;
     unsigned int bet = 1;
-    unsigned int totalBet = bet * lines;
+    unsigned int totalBet;
     std::set<unsigned int> bets = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20};
     std::vector<Reel> baseReels;
     std::vector<Reel> freeReels;
     Window window;
-    std::vector<std::vector<unsigned int>> payoff;
+    std::vector<std::vector<double>> payoff;
     std::vector<std::vector<unsigned int>> winlines;
     unsigned int wild = 0;
     unsigned int scatter = 12;
-    unsigned int payment = 0;
+    double payment = 0;
     unsigned int freeGames = 0;
-    unsigned int maximumFreeGames = 300; // 300
     bool isBaseMode = true;
 
     void updateFreeGames();
 
+    std::vector<double> symbolPayments;
+
+
 public:
 
-    SlotMachine(const std::vector<Reel> &baseReels, const std::vector<Reel> &freeReels, const std::vector<std::vector<unsigned int>> payoff,
-                const std::vector<std::vector<unsigned int>> winlines,
+    SlotMachine(const std::vector<Reel> &baseReels, const std::vector<Reel> &freeReels,
+                const std::vector<std::vector<double>> &payoff,
+                const std::vector<std::vector<unsigned int>> &winlines,
                 unsigned int height);
 
-    void play(std::vector<Reel> & reels);
+    void play(std::vector<Reel> &reels);
 
-//    unsigned int pay();
+
+    std::vector<double> getSymbolPayments();
+
 
     unsigned int pay2();
 
     unsigned int payForLine(const std::vector<unsigned int> &line, unsigned int symbol);
+
     unsigned int payForScatters();
 
     void switchMode();
