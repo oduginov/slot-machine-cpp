@@ -29,6 +29,11 @@ private:
     unsigned int scatter = 12;
     double payment = 0;
     unsigned int freeGames = 0;
+    unsigned int freeSpins = 0;
+public:
+    unsigned int getFreeSpins() const;
+
+private:
     bool isBaseMode = true;
 
     void updateFreeGames();

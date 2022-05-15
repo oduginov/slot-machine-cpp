@@ -76,6 +76,7 @@ int main() {
                    {freeReel1, freeReel2, freeReel3, freeReel4, freeReel5}, payoff, winlines, 3);
     TestSlotMachine test(sm);
     std::cout << test.getRTP();
-
+//    std::cout << test.testSymbolPayments();
+//    test.testFreeSpins();
     return 0;
 }

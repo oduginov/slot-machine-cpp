@@ -41,7 +41,11 @@ std::vector<Reel> SlotMachine::getBaseReels() const {
 
 unsigned int SlotMachine::payForLine(const std::vector<unsigned int> &line, unsigned int symbol) {
     unsigned int i = 0;
+    unsigned int countWild = 0, alpha = 1;
     for (auto x: line) {
+        if (x == wild) {
+            countWild++;
+        }
         if (x == symbol || x == wild) {
             i++;
         } else {
@@ -51,21 +55,30 @@ unsigned int SlotMachine::payForLine(const std::vector<unsigned int> &line, unsi
     if (i == 0) {
         return 0;
     }
-
-    return payoff[symbol][i - 1];
+    if (isBaseMode) {
+        if (countWild > 0 && symbol != wild) {
+            alpha = 2;
+        }
+    } else {
+        if (countWild != window.getWidth()) {
+            if (countWild > 0 && symbol != wild) {
+                alpha = 6;
+            } else {
+                alpha = 3;
+            }
+        }
+    }
+    return alpha * payoff[symbol][i - 1];
 }
 
 unsigned int SlotMachine::pay2() {
     double currentPayment = 0;
     auto w = window.getWindow();
     for (const auto &pattern: winlines) {
-        unsigned int countWild = 0, alpha = 1;
         std::vector<unsigned int> payline(window.getWidth());
         for (unsigned int i = 0; i < window.getWidth(); i++) {
             payline[i] = w[i][pattern[i]];
-            if (payline[i] == wild) {
-                countWild++;
-            }
+
         }
         double sum = 0;
         unsigned int symb = 0;
@@ -76,19 +89,11 @@ unsigned int SlotMachine::pay2() {
                 symb = symbol;
             }
         }
-        if (isBaseMode) {
-            if (countWild > 0) {
-                alpha = 2;
-            }
-        } else {
-            if (countWild != window.getWidth()) {
-                alpha = 3;
-            }
-        }
+
         if (!isBaseMode) {
-            symbolPayments[symb] += (alpha * sum);
+            symbolPayments[symb] += sum;
         }
-        currentPayment += (alpha * sum);
+        currentPayment += sum;
     }
     currentPayment += payForScatters();
 //    currentPayment *= lines / 10.0;
@@ -137,10 +142,12 @@ std::vector<std::vector<unsigned int>> SlotMachine::getWinlines() const {
 void SlotMachine::simulateGame(unsigned int iters) {
     payment = 0;
     freeGames = 0;
+    freeSpins = 0;
     for (unsigned int i = 0; i < iters; i++) {
         isBaseMode = true;
         play(baseReels);
         while (freeGames > 0) {
+            freeSpins++;
             isBaseMode = false;
             play(freeReels);
             freeGames--;
@@ -161,4 +168,8 @@ void SlotMachine::updateFreeGames() {
     if (c >= 3) {
         freeGames += 15;
     }
+}
+
+unsigned int SlotMachine::getFreeSpins() const {
+    return freeSpins;
 }

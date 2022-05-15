@@ -37,7 +37,7 @@ TestSlotMachine::TestSlotMachine(SlotMachine sm) : sm(sm) {
 }
 
 double TestSlotMachine::getRTP() {
-    unsigned int iter = 1'000'000;
+    unsigned int iter = 100'000'000;
     sm.simulateGame(iter);
     return sm.getPayment() * 100.0 / (iter * sm.getTotalBet());
 }
@@ -54,7 +54,13 @@ std::vector<double> TestSlotMachine::testSymbolPayments() {
     sm.simulateGame(iter);
     auto v = sm.getSymbolPayments();
     for(auto& x : v){
-        x = x/iter;
+        x = x / sm.getFreeSpins();
     }
     return v;
+}
+
+void TestSlotMachine::testFreeSpins() {
+    unsigned int iter = 100'000'000;
+    sm.simulateGame(iter);
+    std::cout << (double)sm.getFreeSpins()/iter;
 }
